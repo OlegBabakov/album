@@ -1,0 +1,11 @@
+file:
+    resource: "@FileBundle/Resources/config/routing.yml"
+    prefix:   /file
+
+main:
+    resource: "@MainBundle/Resources/config/routing.yml"
+    prefix:   /
+
+oneup_uploader:
+    resource: .
+    type: uploader
