@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- META SECTION -->
+    <title>
+        {% block title %}Gallery{% endblock title %}
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <!-- END META SECTION -->
+
+    {% block style %}
+        <link rel="stylesheet" type="text/css" id="theme" href="/css/theme-default.css"/>
+    {% endblock style %}
+
+    {% block javascript %}
+        <!-- START SCRIPTS -->
+        <!-- START PLUGINS -->
+        <script type="text/javascript" src="/js/plugins/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/bootstrap/bootstrap.min.js"></script>
+        <!-- END PLUGINS -->
+
+        <!-- START THIS PAGE PLUGINS-->
+        <script type='text/javascript' src='/js/plugins/icheck/icheck.min.js'></script>
+        {#<script type="text/javascript" src="/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>#}
+
+        <script type="text/javascript" src="/js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/dropzone/dropzone.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/icheck/icheck.min.js"></script>
+        <!-- END THIS PAGE PLUGINS-->
+
+        <!-- START TEMPLATE -->
+        <script type="text/javascript" src="/js/plugins.js"></script>
+        <script type="text/javascript" src="/js/actions.js"></script>
+        <!-- END TEMPLATE -->
+
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+        <script src="{{ asset('bundles/gallery/AlbumManager.js') }}"></script>
+        <script src="{{ asset('bundles/gallery/GalleryEventHandler.js') }}"></script>
+        <script src="{{ asset('bundles/gallery/Templating.js') }}"></script>
+
+        <script src="{{ asset('assets/vendor/mustache.js/mustache.min.js') }}"></script>
+    {% endblock javascript %}
+
+</head>
+<body>
+    {% block page %}
+    {% endblock page %}
+
+    {% include '@Gallery/widget/alerts_popups.html.twig' %}
+
+    <!-- START PRELOADS -->
+    <audio id="audio-alert" src="/audio/alert.mp3" preload="auto"></audio>
+    <audio id="audio-fail" src="/audio/fail.mp3" preload="auto"></audio>
+    <!-- END PRELOADS -->
+</body>
+</html>
+
+
+
+
+
+

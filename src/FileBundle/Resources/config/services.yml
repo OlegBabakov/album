@@ -1,0 +1,15 @@
+parameters:
+    file.upload_listener.class: FileBundle\Classes\Listener\UploadListener
+    file.file.media_upload_manager.class: FileBundle\Service\MediaUploadManager
+
+services:
+
+    file.upload_listener:
+        class: '%file.upload_listener.class%'
+        arguments: ['@service_container']
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+
+    file.media_upload_manager:
+        class: '%file.file.media_upload_manager.class%'
+        arguments: ['@doctrine.orm.entity_manager', '@liip_imagine.cache.manager']

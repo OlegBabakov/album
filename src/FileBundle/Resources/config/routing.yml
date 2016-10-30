@@ -1,0 +1,11 @@
+file.upload.page:
+    path:     /upload
+    defaults: { _controller: FileBundle:Main:index }
+
+file.preview_file:
+    path:     /{reference}/preview
+    defaults: { _controller: FileBundle:Main:preview }
+
+file.download_file:
+    path:     /{reference}/download
+    defaults: { _controller: FileBundle:Main:download }

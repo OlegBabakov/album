@@ -1,0 +1,5 @@
+mainpage:
+    path:     /
+    defaults: { _controller: GalleryBundle:Main:index }
+
+

@@ -1,0 +1,2 @@
+GalleryBundle\Entity\Album:
+    exclusion_policy: ALL

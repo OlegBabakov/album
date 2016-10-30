@@ -1,6 +1,6 @@
 <?php
 
-namespace MainBundle\Tests\Controller;
+namespace GalleryBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

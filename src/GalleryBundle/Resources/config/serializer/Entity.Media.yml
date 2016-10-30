@@ -1,0 +1,7 @@
+GalleryBundle\Entity\Media:
+    exclusion_policy: ALL
+    properties:
+        url:
+            expose: true
+        title:
+            expose: true

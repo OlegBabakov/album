@@ -1,0 +1,215 @@
+{% extends '@Gallery/template/base.html.twig' %}
+
+{% block page %}
+    <div class="page-container">
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content">
+
+            <!-- START X-NAVIGATION VERTICAL -->
+            <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+                <!-- SIGN OUT -->
+                <li class="xn-icon-button pull-right">
+                    <a href="#"><span class="fa fa-cog"></span></a>
+                </li>
+                <!-- END SIGN OUT -->
+
+            </ul>
+            <!-- END X-NAVIGATION VERTICAL -->
+
+            <!-- START CONTENT FRAME -->
+            <div class="content-frame">
+
+                <!-- START CONTENT FRAME TOP -->
+                <div class="content-frame-top">
+                    <div class="page-title">
+                        <h2><span class="fa fa-image"></span> <span id="album-title">Gallery</span></h2>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#modal-album-add">
+                            <span class="fa fa-plus"></span> Create Album
+                        </button>
+                        <button class="btn btn-primary upload-button">
+                            <span class="fa fa-upload"></span> Upload Photos
+                        </button>
+                    </div>
+                </div>
+
+                <!-- START CONTENT FRAME RIGHT -->
+                <div class="content-frame-right">
+
+
+                    {% verbatim %}
+                        <div id="album-list-template" hidden>
+                            <a href="#" class="list-group-item {{active}} album-model" data-id="{{id}}" data-title="{{title}}">{{title}} <span class="badge badge-primary">{{mediasCount}}</span></a>
+                        </div>
+                    {% endverbatim %}
+
+                    <div class="list-group border-bottom push-down-20" id="album-list">
+                    </div>
+
+                    <h4>Drop your photos here:</h4>
+                    <div class="block push-up-10">
+                        <form action="{{ oneup_uploader_endpoint('gallery') }}" class="dropzone dropzone-mini" id="photo-dropzone">
+                            <input type="hidden" name="album" value="0">
+                        </form>
+                    </div>
+                </div>
+                <!-- END CONTENT FRAME RIGHT -->
+
+                <!-- START CONTENT FRAME BODY -->
+                <div class="content-frame-body content-frame-body-left">
+
+                    <div class="pull-left push-up-10">
+                        <ul class="pagination pagination-sm">
+                            <li class="disabled"><a href="#">«</a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">»</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="pull-right push-up-10">
+                        <div class="btn-group">
+                            <button class="btn btn-primary" id="gallery-toggle-items"><i class="fa fa-check-square-o"></i> Toggle All</button>
+                            <button class="btn btn-primary"><span class="fa fa-trash-o"></span> Delete</button>
+                        </div>
+                    </div>
+
+                    {% verbatim %}
+                        <script type="application/text" id="gallery-image-template">
+                            <a class="gallery-item" href="{{url}}" title="{{title}}" data-gallery data-id="{{id}}">
+                                <div class="image">
+                                    <img src="{{thumb}}" alt="{{title}}"/>
+                                    <!--<ul class="gallery-item-controls">-->
+                                        <!--<li><label class="check"><input type="checkbox" class="icheckbox"/></label></li>-->
+                                        <!--<li class="gallery-item-edit"><span><i class="fa fa-pencil"></i></span></li>-->
+                                        <!--<li class="gallery-item-remove"><span><i class="fa fa-times"></i></span></li>-->
+                                    <!--</ul>-->
+                                </div>
+                                <div class="meta">
+                                    <strong>{{title}}</strong>
+                                    <span>{{description}}</span>
+                                </div>
+                            </a>
+                        </script>
+                    {% endverbatim %}
+
+                    <div id="empty-gallery-message" hidden>
+                        <h3>
+                            No images in album<br>
+                            <a style="cursor: pointer;" class="upload-button">Upload images</a>
+                        </h3>
+                    </div>
+
+                    <div class="gallery" id="links"
+                    </div>
+                </div>
+                <!-- END CONTENT FRAME BODY -->
+            </div>
+            <!-- END CONTENT FRAME -->
+
+
+        </div>
+        <!-- END PAGE CONTENT -->
+    </div>
+    <!-- END PAGE CONTAINER -->
+
+    <!-- BLUEIMP GALLERY -->
+    <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+    </div>
+    <!-- END BLUEIMP GALLERY -->
+
+    <!-- Modals -->
+    {% include '@Gallery/widget/modal_album_add.html.twig' %}
+    {% include '@Gallery/widget/modal_media_edit.html.twig' %}
+    <!-- End Modals -->
+
+    <script>
+//        document.getElementById('links').onclick = function (event) {
+//            event = event || window.event;
+//            var target = event.target || event.srcElement;
+//            var link = target.src ? target.parentNode : target;
+//            var options = {index: link, event: event,onclosed: function(){
+//                setTimeout(function(){
+//                    $("body").css("overflow","");
+//                },200);
+//            }};
+//            var links = this.getElementsByTagName('a');
+//            blueimp.Gallery(links, options);
+//        };
+
+        $(function () {
+
+            $(document).ajaxComplete(function() {
+                GalleryEventHandler.onAjaxReload();
+            });
+
+            Dropzone.options.photoDropzone = {
+                init: function() {
+                    this.on("complete", function() {
+                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) { //wait when all files are complete
+                            GalleryEventHandler.onUploadComplete();
+                        }
+                    });
+
+                    this.on("addedfile", function(file) {
+                        if (!AlbumManager.data.activeAlbum) {
+                            this.removeFile(file);
+                            popup('info', 'Please select album to upload files<br>Or create your first album');
+                        }
+                    });
+                }
+            };
+
+            AlbumManager.getAlbumList(function () {
+                var defaultAlbum = $('.album-model[data-id=1]');
+                if (defaultAlbum.length) {
+                    AlbumManager.setActiveAlbum(defaultAlbum)
+                }
+            });
+
+            $("#modal-album-add").on("hidden.bs.modal", function () {
+                var input = $('#add-album-title');
+                input.removeClass('error');
+            });
+
+            $('#add-album-submit').click(function(){
+                var input = $('#add-album-title');
+                if (!input.val()) {
+                    input.addClass('error');
+                    return;
+                }
+                AlbumManager.addAlbum(
+                    input.val(),
+                    function (success) {
+                        $("#modal-album-add").modal('hide');
+                    }
+                )
+            });
+
+            $('.upload-button').click(function(){
+                $('#photo-dropzone').click();
+            });
+
+            // Every time a modal is shown, if it has an autofocus element, focus on it.
+            $('.modal').on('shown.bs.modal', function() {
+                $(this).find('[autofocus]').focus();
+            });
+
+        });
+
+    </script>
+{% endblock page %}
+
+
+

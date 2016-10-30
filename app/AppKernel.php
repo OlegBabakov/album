@@ -17,8 +17,15 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
 
             new Oneup\UploaderBundle\OneupUploaderBundle(),
-            new MainBundle\MainBundle(),
+            new Liip\ImagineBundle\LiipImagineBundle(),
+
+            new RestApiBundle\RestApiBundle(),
+            new GalleryBundle\GalleryBundle(),
             new FileBundle\FileBundle(),
+
+            new FOS\RestBundle\FOSRestBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

@@ -1,11 +1,22 @@
+rest_api:
+    type: rest
+    resource: "@RestApiBundle/Resources/config/routing.yml"
+    prefix:   /api/v1
+
 file:
     resource: "@FileBundle/Resources/config/routing.yml"
     prefix:   /file
 
 main:
-    resource: "@MainBundle/Resources/config/routing.yml"
+    resource: "@GalleryBundle/Resources/config/routing.yml"
     prefix:   /
 
 oneup_uploader:
     resource: .
     type: uploader
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
