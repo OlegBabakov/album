@@ -1,5 +1,4 @@
 # Album
-=====
 
 ## Project prepare:
 - composer install
@@ -14,7 +13,7 @@
 - php app/console cache:clear --env=prod
 - php app/console doctrine:fixtures:load --env=prod
 - php app/console cache:warmup --env=prod
-<br /><br />
+
 ## Testing:
 - php phpunit.phar
 
