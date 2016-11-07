@@ -3,10 +3,13 @@ album
 
 Project prepare:
 composer install
-permissions to: app/cache
-permissions to: app/logs
-permissions to: web/cache
-permissions to: web/uploads
+
+Read: http://symfony.com/doc/current/setup/file_permissions.html to set ACL permissions on Linux/BSD
+write permissions to: app/cache
+write permissions to: app/logs
+write permissions to: web/cache
+write permissions to: web/uploads
+
 php app/console doctrine:schema:update 
 Copy "gallery_fixtures_web_path" from parameters.yml.dist
 php app/console cache:clear --env=prod
