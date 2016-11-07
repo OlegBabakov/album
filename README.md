@@ -9,6 +9,5 @@ php app/console cache:warmup --env=prod
 
 
 Testing:
-This project contains PHPUnit 4.* version,
-because newest one tries to use yml parser from Symfony 3 
+php phpunit.phar
 
