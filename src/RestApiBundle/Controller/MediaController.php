@@ -8,7 +8,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 class MediaController extends FOSRestController
 {
     /**
-     * GET Route annotation.
+     * Returs media collection on $page of $album
      * @Get("/albums/{album}/page/{page}")
      */
     public function getMediasAction($album, $page) {

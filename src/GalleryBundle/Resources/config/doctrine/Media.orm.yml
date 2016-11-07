@@ -1,0 +1,36 @@
+GalleryBundle\Entity\Media:
+    type: entity
+    table: null
+    repositoryClass: GalleryBundle\Repository\MediaRepository
+    manyToOne:
+        album:
+            targetEntity: Album
+            inversedBy: medias
+            joinColumn:
+                name: album
+                referencedColumnName: id
+                onDelete: SET NULL
+            cascade:
+              - remove
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        url:
+            type: string
+            length: 255
+        title:
+            type: string
+            length: 255
+            nullable: true
+        description:
+            type: string
+            length: 255
+            nullable: true
+        fileInfo:
+            type: json_array
+            nullable: true
+    lifecycleCallbacks: {  }

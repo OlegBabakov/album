@@ -9,43 +9,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <!-- END META SECTION -->
 
     {% block style %}
-        <link rel="stylesheet" type="text/css" id="theme" href="/css/theme-default.css"/>
+        {#Compiling all files in one by assetic bundle#}
+        {% stylesheets
+            'assets/vendor/bootstrap/dist/css/bootstrap.min.css'
+            'assets/vendor/jquery-ui/themes/dark-hive/jquery-ui.min.css'
+            'assets/vendor/components-font-awesome/css/font-awesome.min.css'
+            'css/dropzone/dropzone.css'
+            'css/blueimp/blueimp-gallery.min.css'
+            'css/theme-default.css'
+            filter='uglifycss' filter='cssrewrite' output='css/app.css'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
     {% endblock style %}
 
     {% block javascript %}
-        <!-- START SCRIPTS -->
-        <!-- START PLUGINS -->
-        <script type="text/javascript" src="/js/plugins/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="/js/plugins/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="/js/plugins/bootstrap/bootstrap.min.js"></script>
-        <!-- END PLUGINS -->
-
-        <!-- START THIS PAGE PLUGINS-->
-        <script type='text/javascript' src='/js/plugins/icheck/icheck.min.js'></script>
-        {#<script type="text/javascript" src="/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>#}
-
-        <script type="text/javascript" src="/js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
-        <script type="text/javascript" src="/js/plugins/dropzone/dropzone.min.js"></script>
-        <script type="text/javascript" src="/js/plugins/icheck/icheck.min.js"></script>
-        <!-- END THIS PAGE PLUGINS-->
-
-        <!-- START TEMPLATE -->
-        <script type="text/javascript" src="/js/plugins.js"></script>
-        <script type="text/javascript" src="/js/actions.js"></script>
-        <!-- END TEMPLATE -->
-
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-
-        <script src="{{ asset('bundles/gallery/AlbumManager.js') }}"></script>
-        <script src="{{ asset('bundles/gallery/GalleryEventHandler.js') }}"></script>
-        <script src="{{ asset('bundles/gallery/Templating.js') }}"></script>
-
-        <script src="{{ asset('assets/vendor/mustache.js/mustache.min.js') }}"></script>
+        {#Compiling all files in one by assetic bundle#}
+        {#'assets/vendor/dropzone/dist/min/dropzone.min.js'#}
+        {% javascripts filter="?jsqueeze" output="js/app.js"
+            'assets/vendor/jquery/dist/jquery.min.js'
+            'assets/vendor/jquery-ui/jquery-ui.min.js'
+            'assets/vendor/bootstrap/dist/js/bootstrap.min.js'
+            'assets/vendor/iCheck/icheck.min.js'
+            'js/plugins/dropzone/dropzone.min.js'
+            'assets/vendor/mustache.js/mustache.min.js'
+            'assets/vendor/jquery-lazy/jquery.lazy.min.js'
+            'js/plugins/blueimp/jquery.blueimp-gallery.min.js'
+            'js/src/template-plugins.js'
+            'js/src/template-actions.js'
+            '@GalleryBundle/Resources/public/AlbumManager.js'
+            '@GalleryBundle/Resources/public/GalleryEventHandler.js'
+            '@GalleryBundle/Resources/public/Templating.js'
+            '@GalleryBundle/Resources/public/Routing.js'
+            '@GalleryBundle/Resources/public/InterfaceControls.js'
+        %}
+        <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
     {% endblock javascript %}
 
 </head>

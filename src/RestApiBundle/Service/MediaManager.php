@@ -10,6 +10,7 @@ namespace RestApiBundle\Service;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Knp\Component\Pager\Paginator;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Request;
 
 class MediaManager
@@ -25,20 +26,24 @@ class MediaManager
     private $serializer;
     /**@var Paginator*/
     private $paginator;
+    /**@var TwigEngine*/
+    private $templating;
 
     /**
      * MediaManager constructor.
-     * @param Registry $doctrine
-     * @param Request $request
-     * @param SerializerService $serializer
-     * @param \Knp\Component\Pager\Paginator $paginator
+     * @param $doctrine
+     * @param $request
+     * @param $serializer
+     * @param $paginator
+     * @param $templating
      */
-    public function __construct($doctrine, $request, $serializer, $paginator)
+    public function __construct($doctrine, $request, $serializer, $paginator, $templating)
     {
         $this->doctrine = $doctrine;
         $this->request = $request;
         $this->serializer = $serializer;
         $this->paginator = $paginator;
+        $this->templating = $templating;
     }
 
     /**
@@ -46,33 +51,50 @@ class MediaManager
      * @return array
      */
     public function getMedias() {
-        $album =$this->request->get('album');
-        if (!$album) return null;
+        //Default result
+        $result = [
+            'medias' => [],    //Medias collection
+            'paginator' => ''  //Rendered paginator
+        ];
 
+        //Fetch request params
+        $album =$this->request->get('album');
+        $page = $this->request->get('page') ? : 1;
+        if (!$album) return $result;
+
+        //Getting medias on current page
+        /**@var \Doctrine\ORM\Query $query*/
         $dql   = "SELECT m FROM GalleryBundle:Media m WHERE m.album = :album";
         $query = $this->doctrine->getManager()->createQuery($dql);
         $query->setParameter('album', $album);
-
-        $page = $this->request->get('page') ? : 1;
         $pagination = $this->paginator->paginate(
             $query,
             $page,
             $this::IMAGES_LIMIT_PER_PAGE
         );
+        $result['medias'] = $pagination->getItems();
 
-        $collection = $pagination->getItems();
-        if ($collection) {
-            $collection = $this
-                ->serializer
-                ->getSerializer()
-                ->normalize(
-                    $collection,
-                    $this::REQUEST_DATA_FORMAT,
-                    ['groups' => ['api']]
-                );
-            return $collection;
-        }
-        return [];
+        //Getting medias amount in album
+        $dql   = "SELECT count(m.id) as qty FROM GalleryBundle:Media m WHERE m.album = :album";
+        $query = $this->doctrine->getManager()->createQuery($dql);
+        $query->setParameter('album', $album);
+        $mediasAmout = $query->getSingleScalarResult();
+        $result['paginator'] = $this->templating->render('@Gallery/widget/pagination.html.twig', [
+            'showAlwaysFirstAndLast' => false,
+            'currentPage'            => $page,
+            'album'                  => $album,
+            'lastPage'               => ceil($mediasAmout/$this::IMAGES_LIMIT_PER_PAGE)
+        ]);
+
+        $result = $this
+            ->serializer
+            ->getSerializer()
+            ->normalize(
+                $result,
+                $this::REQUEST_DATA_FORMAT,
+                ['groups' => ['api']]
+            );
+        return $result;
     }
 
 }

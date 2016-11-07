@@ -1,2 +1,15 @@
 imports:
     - { resource: services.yml }
+
+liip_imagine:
+    cache: gallery_media
+    resolvers:
+        gallery_media:
+            web_path:
+                web_root: "%kernel.root_dir%/../web"
+                cache_prefix: "cache"
+    filter_sets:
+        album_thumb:
+            quality: 85
+            filters:
+                thumbnail: { size: [400, 300], mode: outbound }

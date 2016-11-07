@@ -54,8 +54,12 @@ class MediaUploadManager
         if ($album) {
             $object = new Media();
 
-            $fileInfo['url']          = "/uploads/{$fileMappingType}/{$file->getFilename()}";
-            $fileInfo['thumbUrl']     = $this->imageCacheManager->getBrowserPath($fileInfo['url'], $this::MEDIA_LIIP_THUMB_FILTER_NAME);
+            $url = "/uploads/{$fileMappingType}/{$file->getFilename()}";
+            $thumb = $this->imageCacheManager->getBrowserPath($url, $this::MEDIA_LIIP_THUMB_FILTER_NAME);
+            $thumb = str_replace('app_dev.php/', '', $thumb);
+
+            $fileInfo['url']          = $url;
+            $fileInfo['thumbUrl']     = $thumb;
             $fileInfo['absolutePath'] = $file->getPathname();
             $fileInfo['originalName'] = $uploadedFile->getClientOriginalName();
             $fileInfo['mimeType']     = $uploadedFile->getClientMimeType();

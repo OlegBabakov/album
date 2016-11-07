@@ -2,7 +2,7 @@
  * Created by oleg on 29.10.16.
  */
 //TODO: edit image, delete image, delete album
-
+//Gallery event handler
 var GalleryEventHandler = {
     // Handles gallery work errors
     // @param boolean success
@@ -14,26 +14,39 @@ var GalleryEventHandler = {
     },
     //update handlers after ajax reload
     'onAjaxReload' : function () {
-        //Album selector handlers
-        // $('a.album-model').on('click', function(){
-        //     AlbumManager.setActiveAlbum($(this));
-        // });
     },
     //handles image upload complete
     'onUploadComplete' : function () {
         AlbumManager.getAlbumList(function () {
-            $('.album-model[data-id='+ AlbumManager.data.activeAlbum.id +']').effect("highlight", {}, 3000); //Highlight album after update
+            AlbumManager.getMediaList();
         });
-        AlbumManager.getMediaList();
     },
     //handles media gallery update event
     'onMediaGalleryUpdate' : function () {
         window.formElements.init(); //update elements customization
 
-        $('.gallery-item-edit')
-            .unbind( "click" )
-            .on('click', function () {
-                $("#modal_media_edit").modal('show');
+        $('#paginator li:not(.disabled) a').on('click', function () {
+            window.location.hash = $(this).attr('href');
+            AlbumManager.parseURL(function () {
+                AlbumManager.getMediaList();
             })
+        });
+
+        $('.lazy').lazy({
+            afterLoad: function(element) {
+                $(element).parent().parent().fadeIn(1000);
+            }
+        });
+    },
+    //handles album update event
+    'onAlbumListUpdate' : function () {
+        //Set album click handler
+        $('#album-list a.album-model').on('click', function(){
+            window.location.hash = Routing.generateHash('get_album_medias', {
+                album : $(this).data('id'),
+                page: 1
+            });
+            AlbumManager.setActiveAlbum();
+        });
     }
 };

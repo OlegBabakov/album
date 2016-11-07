@@ -1,0 +1,22 @@
+{% verbatim %}
+    <script type="application/text" id="gallery-image-template">
+        <a class="gallery-item" href="{{url}}" title="{{title}}" data-gallery data-id="{{id}}">
+            <div class="image">
+                <img class="lazy" src ="/img/hex-loader2.gif" data-src="{{thumb}}" alt="{{title}}" />
+                <ul class="gallery-item-controls">
+                    <li><label class="check"><input type="checkbox" class="icheckbox"/></label></li>
+                    <!--<li class="gallery-item-edit"><span><i class="fa fa-pencil"></i></span></li>-->
+                    <li class="gallery-item-remove"><span><i class="fa fa-times"></i></span></li>
+                </ul>
+            </div>
+            <div class="meta">
+                <strong class="media-text-block">{{title}}</strong>
+                <span>{{description}}</span>
+            </div>
+        </a>
+    </script>
+
+    <div id="album-list-template" hidden>
+        <a href="{{href}}" class="list-group-item {{active}} album-model" data-id="{{id}}" data-title="{{title}}">{{title}} <span class="badge badge-primary">{{mediasCount}}</span></a>
+    </div>
+{% endverbatim %}

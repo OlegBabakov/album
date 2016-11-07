@@ -43,23 +43,19 @@ var AlbumManager = {
     },
     // Set current album and updates interface
     'setActiveAlbum' : function(albumModelElement, callback) {
-        if (AlbumManager.data.activeAlbum) {
-            $('.album-model[data-id='+ AlbumManager.data.activeAlbum.id +']').removeClass('active'); //remove active from prev album
+        AlbumManager.parseURL();
+        if (!AlbumManager.data.activeAlbum.id) return 0;
+        $('.album-model').removeClass('active'); //remove active from prev album
+
+        albumModelElement = $('.album-model[data-id='+ AlbumManager.data.activeAlbum.id +']');
+        if (albumModelElement.length) { //Checks that album list was loaded before
+            albumModelElement.addClass('active');
+            AlbumManager.getMediaList();
+            //Dropzone
+            $('#photo-dropzone input[name=album]').val(AlbumManager.data.activeAlbum.id);
+            //Album Title
+            $('#album-title').html(albumModelElement.data('title'));
         }
-        albumModelElement.addClass('active');
-
-        AlbumManager.data.activeAlbum = {
-            'id'    : albumModelElement.data('id'),
-            'title' : albumModelElement.data('title')
-        };
-        AlbumManager.getMediaList();
-
-        $('#photo-dropzone input[name=album]').val(
-            AlbumManager.data.activeAlbum.id
-        );
-        $('#album-title').html(
-            AlbumManager.data.activeAlbum.title
-        );
     },
     // Updates medias gallery for current album
     'getMediaList' : function(callback) {
@@ -80,10 +76,28 @@ var AlbumManager = {
             });
         }
     },
+    // URL parsing and update gallery parameters
+    'parseURL': function (callback) {
+        var path = window.location.hash;
+        if (path) {
+            path = path.replace('#','');
+            var parts = path.split('/');
 
+            if (parts[0] == 'albums' && parts[2] == 'page' &&
+                Number.isInteger(parseInt(parts[1])) && Number.isInteger(parseInt(parts[3])) ) {
+
+                AlbumManager.data.activeAlbum.id = parseInt(parts[1]);
+                AlbumManager.data.currentPage    = parseInt(parts[3]);
+            }
+        }
+        if (callback) callback();
+    },
     'data' : {
-        'albumList' : {},     //album list
-        'activeAlbum' : null, //current album
+        'albumList' : null,     //album list
+        'activeAlbum' : { //current album
+            'id'   : null,
+            'title': null
+        },
         'currentPage' : 1
     }
 };

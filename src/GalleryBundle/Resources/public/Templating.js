@@ -17,6 +17,10 @@ var Templating = {
         AlbumManager.data.albumList.forEach(function (album) {
             html += Mustache.render(template, {
                 'id'          : album.id,
+                'href'        : '#'+Routing.generateHash('get_album_medias', {
+                    album : album.id,
+                    page: 1
+                }),
                 'title'       : album.title,
                 'mediasCount' : album.mediasCount,
                 'active'      : album.id == activeAlbumId ? 'active' : ''
@@ -24,17 +28,15 @@ var Templating = {
         });
 
         if (html) $('#album-list').html('<h4>Albums:</h4>' + html);
-        $('a.album-model').on('click', function(){
-            AlbumManager.setActiveAlbum($(this));
-        });
+        GalleryEventHandler.onAlbumListUpdate();
     },
 
     //Render media list of current album and page
-    'renderMediaList' : function(mediaList) {
+    'renderMediaList' : function(galleryData) {
         var html = '';
         var template = $('#gallery-image-template').html();
 
-        mediaList.forEach(function (media) {
+        galleryData.medias.forEach(function (media) {
             html += Mustache.render(template, {
                 'id'          : media.id,
                 'url'         : media.url,
@@ -50,6 +52,8 @@ var Templating = {
             $('#empty-gallery-message').show();
         }
         $('#links').html(html);
+        $('#paginator').html(galleryData.paginator);
+
         GalleryEventHandler.onMediaGalleryUpdate();
     }
 };

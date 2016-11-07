@@ -1,0 +1,28 @@
+GalleryBundle\Entity\Album:
+    type: entity
+    table: null
+    repositoryClass: GalleryBundle\Repository\AlbumRepository
+    oneToMany:
+        medias:
+            targetEntity: Media
+            mappedBy: album
+            orphanRemoval: true
+            cascade:
+              - persist
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 255
+    attributes:
+        medias:
+            groups: ['private']
+        title:
+            groups: ['public']
+
+    lifecycleCallbacks: {  }
