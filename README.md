@@ -10,7 +10,7 @@ write permissions to: app/logs
 write permissions to: web/cache
 write permissions to: web/uploads
 
-php app/console doctrine:schema:update 
+php app/console doctrine:schema:update --force 
 Copy "gallery_fixtures_web_path" from parameters.yml.dist
 php app/console cache:clear --env=prod
 php app/console doctrine:fixtures:load --env=prod
